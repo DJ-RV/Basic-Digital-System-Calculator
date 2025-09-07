@@ -51,7 +51,7 @@ outputLabel.grid(row=2,column=1)
 outputFrame = ctk.CTkFrame(app, height=50)
 outputFrame.grid(row=3,column=1)
 
-outputBox = ctk.CTkLabel(outputFrame, text="el pepe" )
+outputBox = ctk.CTkLabel(outputFrame, text="el pepe", width=300)
 outputBox.pack()
 
 
@@ -60,9 +60,9 @@ outputBox.pack()
 
 
 def getDecimalPart(part, base):
-    result = ""
     match base:
         case 2:
+            result = ""
             while part > 0.1:
                 part = part * 2
                 if part > 1:
@@ -70,17 +70,24 @@ def getDecimalPart(part, base):
                     result = result + "1"
                 else:
                     result = result + "0"
-            
             return result
         case 8:
             
             return
         case 10:
-            for each in 
-            return
+            result = 0
+            for i in range(1,len(part) + 1):
+                result = result + int(part[i-1])*pow(2,-i)
+            return result
         case 16:
-            
-            return
+            convers = {
+                "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,
+                "A":10,"B":11,"C":12,"D":13,"E":14,"F":15
+            }
+            result = 0
+            for i in range(1,len(part) + 1):
+                result = result + convers[part[i-1]]*pow(16,-i)
+            return result
     
     return "ñonga"
 
@@ -91,7 +98,8 @@ def toBinary(n, type):
                 return "input is not binary"
         return n
     elif type == "octal":
-        return
+        n = str(toDecimal(n,"octal"))
+        return toBinary(n,"decimal")
     elif type == "decimal":
         #si es decimal y tiene parte decimal se ejecuta el if
         if "." in str(n):
@@ -113,7 +121,8 @@ def toBinary(n, type):
             result = resultWhole + "." + resultDecimal
             return result
         else:
-            partWhole = n
+            resultWhole = ""
+            partWhole = int(n)
             while partWhole > 0:
                 if partWhole % 2 == 0:
                     resultWhole += "0"
@@ -123,16 +132,21 @@ def toBinary(n, type):
             result = resultWhole[::-1]
             return result
     elif type == "hexadecimal":
-        return
+        n = toDecimal(n,"hexadecimal")
+        return toBinary(n,"decimal")
     return
 
 def toOctal(n, type):
     
     return
 
+#Convierte de cualquier base a deicimal
 def toDecimal(n, type):
     if type == "binary":
-        result = ""
+        for i in n:
+            if i != "0" and i != "1" and i != ".":
+                return "input is not binary"
+
         if "." in n:
             result = 0
             power = 0
@@ -142,18 +156,135 @@ def toDecimal(n, type):
             partWhole = partWhole[::-1]
             for i in partWhole:
                 result = result + int(i)*pow(2,power)
-            result = result + getDecimalPart(partDecimal, 10)
-            
-        return result
-        result = 0
-        power = 0
-        n = n[::-1]
-        for i in n:
-            result = result + int(i)*pow(2,power)
-    return
+                power = power + 1
 
+            result = result + getDecimalPart(partDecimal, 10)
+            return result
+        
+        else:
+            result = 0
+            power = 0
+            n = n[::-1]
+            for i in n:
+                result = result + int(i)*pow(2,power)
+                power = power + 1
+            return result
+    elif type == "octal":
+        if "." in n:
+            result = 0
+            power = 0
+            split = n.split(".")
+            partWhole = split[0]
+            partDecimal = split[1]
+            partWhole = partWhole[::-1]
+            for i in partWhole:
+                result = result + int(i)*pow(8,power)
+                power = power + 1
+            result = result + getDecimalPart(partDecimal, 8)
+            return result
+        else:
+            result = 0
+            power = 0
+            n = n[::-1]
+            for i in n:
+                result = result + int(i)*pow(8,power)
+                power = power + 1
+            return result
+    elif type == "decimal":
+        return n
+    elif type == "hexadecimal":
+
+        convers = {
+            "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,
+            "A":10,"B":11,"C":12,"D":13,"E":14,"F":15
+        }
+        
+        if "." in n:
+            result = 0
+            power = 0
+            split = n.split(".")
+            partWhole = split[0]
+            partDecimal = float( "0." + split[1])
+            partWhole = partWhole[::-1]
+            for i in partWhole:
+                result = result + convers[i]*pow(16,power)
+                power = power + 1
+            result = result + getDecimalPart(partDecimal, 16)
+            return result
+        else:
+            result = 0
+            power = 0
+            n = n[::-1]
+            for i in n:
+                result = result + convers[i]*pow(16,power)
+                power = power + 1
+            return result
+    return 
+
+
+
+#transformacion a hexadecimal
 def toHexadecimal(n, type):
-    
+    if type == "binary":
+        n = toDecimal(n, "binary")
+        return toHexadecimal(n, "decimal")
+    elif type == "octal":
+        n = toDecimal(n, "octal")
+        return toHexadecimal(n, "decimal")
+    elif type == "decimal":
+
+        invers = {
+            "0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9",
+            "10":"A","11":"B","12":"C","13":"D","14":"E","15":"F"
+        }
+
+        if "." in str(n):
+            print("eldiablo")
+            split = str(n).split(".") 
+            partWhole = float(split[0])
+            partDecimal = float("0." + split[1])
+            resultWhole = ""
+            resultDecimal = ""
+            while partWhole > 0:
+                if partWhole % 16 == 0:
+                    resultWhole += "0"
+                else:
+                    aux = partWhole / 16
+                    aux = aux - int(aux)
+                    aux = int(aux * 16)
+                    resultWhole += invers[str(aux)]
+                partWhole = partWhole // 16
+            resultWhole = resultWhole[::-1]
+
+            #lo hago aquí noma que flojera hacer una funcion
+            while partDecimal > 0.1:
+                partDecimal = partDecimal * 16
+                if partDecimal > 1:
+                    resultDecimal += invers[str(int(partDecimal))]
+                    partDecimal = partDecimal - int(partDecimal)
+                else:
+                    resultDecimal = resultDecimal + "0"
+
+            
+            result = resultWhole + "." + resultDecimal
+            return result
+        else:
+            resultWhole = ""
+            partWhole = float(n)
+            while partWhole > 0:
+                if partWhole % 16 == 0:
+                    resultWhole += "0"
+                else:
+                    aux = partWhole / 16
+                    aux = aux - int(aux)
+                    aux = int(aux * 16)
+                    resultWhole = resultWhole + invers[str(aux)]
+                partWhole = partWhole // 16
+            result = resultWhole[::-1]
+            return result
+    elif type == "hexadecimal":
+        
+        return
     return
 
 def showOut(output):
@@ -175,8 +306,12 @@ def run():
         case "octal":
             return
         case "decimal":
+            result = toDecimal(n,entryType)
+            showOut(result)
             return
         case "hexadecimal":
+            result = toHexadecimal(n,entryType)
+            showOut(result)
             return
         case _:
             return
