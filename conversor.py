@@ -137,7 +137,59 @@ def toBinary(n, type):
     return
 
 def toOctal(n, type):
-    
+    if type == "binary":
+        n = str(toDecimal(n, "binary"))
+        return toOctal(n, "decimal")
+    elif type == "octal":
+        return n
+    elif type == "decimal":
+        if "." in str(n):
+            print("eldiablo")
+            split = str(n).split(".") 
+            partWhole = float(split[0])
+            partDecimal = float("0." + split[1])
+            resultWhole = ""
+            resultDecimal = ""
+            while partWhole > 0:
+                if partWhole % 8 == 0:
+                    resultWhole += "0"
+                else:
+                    aux = partWhole / 8
+                    aux = aux - int(aux)
+                    aux = int(aux * 8)
+                    resultWhole += str(aux)
+                partWhole = partWhole // 8
+            resultWhole = resultWhole[::-1]
+
+            #lo hago aquí noma que flojera hacer una funcion
+            while partDecimal > 0.1:
+                partDecimal = partDecimal * 8
+                if partDecimal > 1:
+                    resultDecimal += str(int(partDecimal))
+                    partDecimal = partDecimal - int(partDecimal)
+                else:
+                    resultDecimal = resultDecimal + "0"
+
+            
+            result = resultWhole + "." + resultDecimal
+            return result
+        else:
+            resultWhole = ""
+            partWhole = float(n)
+            while partWhole > 0:
+                if partWhole % 8 == 0:
+                    resultWhole += "0"
+                else:
+                    aux = partWhole / 8
+                    aux = aux - int(aux)
+                    aux = int(aux * 8)
+                    resultWhole = resultWhole + str(aux)
+                partWhole = partWhole // 8
+            result = resultWhole[::-1]
+            return result
+    elif type == "hexadecimal":
+        n = str(toDecimal(n,"hexadecimal"))
+        return toOctal(n,"decimal")
     return
 
 #Convierte de cualquier base a deicimal
@@ -146,7 +198,6 @@ def toDecimal(n, type):
         for i in n:
             if i != "0" and i != "1" and i != ".":
                 return "input is not binary"
-
         if "." in n:
             result = 0
             power = 0
@@ -226,10 +277,10 @@ def toDecimal(n, type):
 #transformacion a hexadecimal
 def toHexadecimal(n, type):
     if type == "binary":
-        n = toDecimal(n, "binary")
+        n = str(toDecimal(n, "binary"))
         return toHexadecimal(n, "decimal")
     elif type == "octal":
-        n = toDecimal(n, "octal")
+        n = str(toDecimal(n, "octal"))
         return toHexadecimal(n, "decimal")
     elif type == "decimal":
 
@@ -283,8 +334,7 @@ def toHexadecimal(n, type):
             result = resultWhole[::-1]
             return result
     elif type == "hexadecimal":
-        
-        return
+        return n
     return
 
 def showOut(output):
@@ -296,14 +346,14 @@ def run():
     outputType = outputDropdown.get()
     n = digitEntry.get()
     result=""
-    print("haps")
     match outputType:
         case "binary":
-            print("haps")
             result = toBinary(n,entryType)
             showOut(result)
             return
         case "octal":
+            result = toOctal(n,entryType)
+            showOut(result)
             return
         case "decimal":
             result = toDecimal(n,entryType)
