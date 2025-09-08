@@ -72,8 +72,10 @@ def getDecimalPart(part, base):
                     result = result + "0"
             return result
         case 8:
-            
-            return
+            result = 0
+            for i in range(1,len(part) + 1):
+                result = result + int(part[i-1])*pow(8,-i)
+            return result
         case 10:
             result = 0
             for i in range(1,len(part) + 1):
@@ -242,7 +244,26 @@ def toDecimal(n, type):
                 power = power + 1
             return result
     elif type == "decimal":
-        return n
+        if "." in n:
+            result = 0
+            power = 0
+            split = n.split(".")
+            partWhole = split[0]
+            partDecimal = float( "0." + split[1])
+            partWhole = partWhole[::-1]
+            for i in partWhole:
+                result = result + convers[i]*pow(8,power)
+                power = power + 1
+            result = result + getDecimalPart(partDecimal, 8)
+            return result
+        else:
+            result = 0
+            power = 0
+            n = n[::-1]
+            for i in n:
+                result = result + convers[i]*pow(8,power)
+                power = power + 1
+            return result
     elif type == "hexadecimal":
 
         convers = {
