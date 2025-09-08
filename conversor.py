@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
@@ -100,7 +101,7 @@ def toBinary(n, type):
                 return "input is not binary"
         return n
     elif type == "octal":
-        n = str(toDecimal(n,"octal"))
+        n = str(round(float(toDecimal(n,"octal")), 5))
         return toBinary(n,"decimal")
     elif type == "decimal":
         #si es decimal y tiene parte decimal se ejecuta el if
@@ -134,13 +135,14 @@ def toBinary(n, type):
             result = resultWhole[::-1]
             return result
     elif type == "hexadecimal":
-        n = toDecimal(n,"hexadecimal")
+        n = str(round(float(toDecimal(n,"hexadecimal")), 5))
+        print(n)
         return toBinary(n,"decimal")
     return
 
 def toOctal(n, type):
     if type == "binary":
-        n = str(toDecimal(n, "binary"))
+        n = str(round(float(toDecimal(n, "binary")), 5))
         return toOctal(n, "decimal")
     elif type == "octal":
         return n
@@ -190,7 +192,7 @@ def toOctal(n, type):
             result = resultWhole[::-1]
             return result
     elif type == "hexadecimal":
-        n = str(toDecimal(n,"hexadecimal"))
+        n = str(round(float(toDecimal(n,"hexadecimal")), 5))
         return toOctal(n,"decimal")
     return
 
@@ -276,7 +278,7 @@ def toDecimal(n, type):
             power = 0
             split = n.split(".")
             partWhole = split[0]
-            partDecimal = float( "0." + split[1])
+            partDecimal = split[1]
             partWhole = partWhole[::-1]
             for i in partWhole:
                 result = result + convers[i]*pow(16,power)
@@ -298,10 +300,10 @@ def toDecimal(n, type):
 #transformacion a hexadecimal
 def toHexadecimal(n, type):
     if type == "binary":
-        n = str(toDecimal(n, "binary"))
+        n = str(round(float(toDecimal(n, "binary")), 5))
         return toHexadecimal(n, "decimal")
     elif type == "octal":
-        n = str(toDecimal(n, "octal"))
+        n = str(round(float(toDecimal(n, "octal")), 5))
         return toHexadecimal(n, "decimal")
     elif type == "decimal":
 
